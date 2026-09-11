@@ -35,3 +35,33 @@ Read `asset-manifest.json`. Every path is relative to this folder. Use the origi
 ## Generation
 
 All source artwork was generated with the built-in image generator. Its model selector is not exposed, so GPT Image 2.5 could not be selected or verified. The files are Milady-vibe reinterpretations of existing brainrot character concepts, not official collection assets. Character identities were checked against [AP's overview](https://apnews.com/article/7600d1faea12be53609f3c2092e02eb7) and [the character overview](https://en.wikipedia.org/wiki/Italian_brainrot).
+
+## Site
+
+`index.html`, `style.css` and `app.js` at this folder's root are the whole site: no build step, no dependencies, no web fonts. Serve the folder over http (`python -m http.server 4181`); `file://` taints the canvas and export stops working. `app.js` fetches `asset-manifest.json` at runtime and takes every id, name, path, rectangle, placement and compatibility list from it.
+
+The preview canvas is the native 1254 × 1254 square, scaled with CSS; Download PNG exports that same canvas, so the picture on the page and the file are the same pixels. Thumbnails, the hero and the compositor reference each PNG by its manifest path with no query string, so each file is downloaded once.
+
+### Page API
+
+`window.__milady` is set as soon as `app.js` runs:
+
+| Member | Meaning |
+| --- | --- |
+| `ready` | Promise that resolves once the manifest is loaded and the initial recipe is drawn. |
+| `manifest` | The parsed `asset-manifest.json` (null until `ready`). |
+| `getRecipe()` | `{ base, background, traits: string[] }`; traits are in layer order. |
+| `setRecipe(recipe)` | Applies a recipe to the controls and the preview, drops unknown or incompatible traits (the status line says which), keeps one item per slot, and writes `location.hash`. |
+| `compose(recipe)` | Resolves to a **new** 1254 × 1254 canvas. Throws on an unknown id, a trait whose `compatibleBases` excludes the base, or two traits in one slot. |
+
+`test/composite-check.mjs <http url>` checks the compositor against `previews/*.png`; `tools/shot.mjs` renders screenshots. Both import Playwright from the shared install named at the top of each file.
+
+### Recipe link
+
+The recipe lives in the hash: `#base=<base id>&background=<background id>&traits=<trait id>,<trait id>` (the `traits` part is omitted when there are none). Example:
+
+    #base=chimpanzini-bananini&background=lavender-bedroom&traits=angel-wings,pink-lace-bow,pink-heart-sticker
+
+It is read on load and rewritten with `history.replaceState` on every change, so a link opens the same look. Section links (`#dressing-room`, `#cast`, `#about`) scroll in place without touching the hash; a hash that is not a recipe leaves the default recipe (the manifest's first example) in place.
+
+The pocket album is `localStorage` only (`milady-brainrot.album.v1`): a list of `{ id, savedAt, recipe, thumb }`, where `thumb` is a small JPEG data URL of the saved look. Nothing leaves the browser.

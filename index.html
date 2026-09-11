@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Milady Brainrot</title>
+<meta name="description" content="A dressing room for seven brainrot characters redrawn as internet dolls. Compose a look, download the PNG, keep it.">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#dressing-room">Skip to the dressing room</a>
+
+<header class="directory">
+  <a class="directory-home" href="#top"><span class="flower" aria-hidden="true">&#10047;</span> Milady Brainrot</a>
+  <nav class="directory-links" aria-label="Directory">
+    <a href="#dressing-room">dressing room</a>
+    <a href="#cast">the cast</a>
+    <a href="#about">about</a>
+  </nav>
+</header>
+
+<main id="top" class="page">
+
+  <section class="masthead" aria-labelledby="masthead-title">
+    <div class="masthead-identity">
+      <h1 id="masthead-title" class="masthead-title">Milady<br>Brainrot</h1>
+      <p class="lead">Seven brainrot characters, redrawn as internet dolls. Pick one, dress it, and take the picture home.</p>
+      <p class="masthead-actions"><a class="button button-primary" href="#dressing-room">Open the dressing room</a></p>
+      <p class="masthead-count mono" id="collection-count">7 residents, 8 items, 2 rooms</p>
+    </div>
+    <figure class="masthead-photo">
+      <div class="masthead-land" aria-hidden="true">
+        <img class="land" data-src="backgrounds/dream-hills.png" alt="">
+        <img class="figure figure-shark" data-src="bases/tralalero-tralala.png" alt="">
+        <img class="figure figure-cup" data-src="bases/ballerina-cappuccina.png" alt="">
+        <img class="figure figure-post" data-src="bases/tung-tung-tung-sahur.png" alt="">
+      </div>
+      <figcaption class="masthead-caption">
+        <span>Dream hills, late afternoon. From the left: Tralalero Tralala, Ballerina Cappuccina, Tung Tung Tung Sahur.</span>
+        <span class="mono">backgrounds/dream-hills.png</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="dressing-room" class="section" aria-labelledby="dressing-title" tabindex="-1">
+    <h2 id="dressing-title" class="section-title">Dressing room</h2>
+    <p class="section-intro">Pick a resident, pick a room, add what fits. The square on the left is the exact PNG you take home, 1254 by 1254.</p>
+
+    <div class="window window-large">
+      <div class="window-titlebar">
+        <span class="window-title" id="window-title">dressing room</span>
+        <span class="window-id mono" id="window-id"></span>
+      </div>
+
+      <div class="dresser">
+        <div class="dresser-stage">
+          <canvas id="preview" class="stage" width="1254" height="1254" aria-label="Live preview of the current look"></canvas>
+          <p class="stage-caption" id="stage-caption"></p>
+        </div>
+
+        <div class="dresser-selector">
+          <fieldset class="row">
+            <legend class="row-label">Resident</legend>
+            <div class="thumbs thumbs-base" id="thumbs-base"></div>
+          </fieldset>
+
+          <fieldset class="row">
+            <legend class="row-label">Room</legend>
+            <div class="thumbs thumbs-background" id="thumbs-background"></div>
+          </fieldset>
+
+          <div class="tabs-wrap">
+            <div class="tabs" role="tablist" aria-label="Trait categories" id="tabs"></div>
+          </div>
+          <div class="panels" id="panels"></div>
+        </div>
+      </div>
+
+      <div class="takehome" role="group" aria-label="Take home">
+        <button type="button" class="button" id="btn-shuffle">Shuffle</button>
+        <button type="button" class="button button-primary" id="btn-download">Download PNG</button>
+        <button type="button" class="button" id="btn-copy">Copy recipe link</button>
+        <button type="button" class="button" id="btn-save">Save to pocket album</button>
+        <span class="takehome-note">The PNG is the preview, pixel for pixel.</span>
+      </div>
+    </div>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="window album" aria-labelledby="album-title">
+      <div class="window-titlebar">
+        <span class="window-title" id="album-title">Pocket album</span>
+        <span class="window-id mono" id="album-count"></span>
+      </div>
+      <div class="album-body">
+        <p class="album-note">Looks saved here stay in this browser, on this device. They are not sent anywhere, and clearing site data removes them.</p>
+        <ul class="album-list" id="album-list"></ul>
+        <p class="album-empty" id="album-empty">Nothing saved yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="cast" class="section" aria-labelledby="cast-title" tabindex="-1">
+    <h2 id="cast-title" class="section-title">The residents</h2>
+    <p class="section-intro">Seven, and recognisably different from each other. Choose one and it goes to the dressing room.</p>
+    <ul class="shelf" id="shelf"></ul>
+  </section>
+
+  <section id="about" class="section" aria-labelledby="about-title" tabindex="-1">
+    <h2 id="about-title" class="section-title">A place to be a little strange</h2>
+    <div class="about">
+      <div class="about-prose">
+        <p class="lead">Milady Brainrot is a small dress-up collection. Seven Italian brainrot characters were redrawn as Milady-style dolls, with big eyes and lace, and given a drawer of things to wear: two bows, a butterfly clip, a tiara, a pixel halo, a cheek sticker, a sparkle aura and one pair of wings.</p>
+        <p>Everything on this page is built from the same layered files, so the look you compose here is the whole work. There is nothing to buy and nothing to join. The point is the picture, and you may keep it.</p>
+        <p>The characters are fan reinterpretations of existing internet concepts, not official assets of anyone.</p>
+      </div>
+      <figure class="scrap">
+        <img class="scrap-img scrap-room" data-src="backgrounds/lavender-bedroom.png" alt="The lavender bedroom: a small television, a lace curtain, a bed with a floral quilt.">
+        <figcaption>The other room. A television is on, nobody is watching. <span class="mono">backgrounds/lavender-bedroom.png</span></figcaption>
+      </figure>
+      <figure class="scrap">
+        <img class="scrap-img scrap-sheet" data-src="references/original-wooden-concepts.png" alt="A sheet of nine earlier wooden character concepts with different hats and collars.">
+        <figcaption>Earlier wooden concepts, kept in the drawer. <span class="mono">references/original-wooden-concepts.png</span></figcaption>
+      </figure>
+    </div>
+    <p class="return"><a class="button" href="#dressing-room">Back up to the dressing room</a></p>
+  </section>
+
+</main>
+
+<footer class="colophon">
+  <span><span class="flower" aria-hidden="true">&#10047;</span> Milady Brainrot</span>
+  <span>Made of seven PNGs, eight PNGs and two PNGs.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
