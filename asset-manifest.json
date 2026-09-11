@@ -1,0 +1,794 @@
+{
+  "version": 1,
+  "name": "Milady Brainrot",
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "layerOrder": [
+    "background",
+    "back",
+    "base",
+    "headwear",
+    "face",
+    "effect"
+  ],
+  "rectangleFormat": "[x, y, width, height], pixels on the native 1254 square canvas",
+  "baseDestinationRect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "backgroundDestinationRect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "selectionRules": {
+    "required": [
+      "background",
+      "base"
+    ],
+    "optionalSlots": [
+      "back",
+      "headwear",
+      "face",
+      "effect"
+    ],
+    "maxPerSlot": 1,
+    "compatibility": "A trait must list the selected base in compatibleBases. Use that base's placement rectangle."
+  },
+  "bases": [
+    {
+      "id": "tralalero-tralala",
+      "name": "Tralalero Tralala",
+      "slot": "base",
+      "path": "bases/tralalero-tralala.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "ed89df23f11de3d779166b6905d289ee01ffe55dfaa9f62d5f867e8aa777cd5e"
+    },
+    {
+      "id": "ballerina-cappuccina",
+      "name": "Ballerina Cappuccina",
+      "slot": "base",
+      "path": "bases/ballerina-cappuccina.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "e3668d5f435201fa1e1d39bbb360a83ab9bb4e4ce758d35ddda740aee984e316"
+    },
+    {
+      "id": "bombardiro-crocodilo",
+      "name": "Bombardiro Crocodilo",
+      "slot": "base",
+      "path": "bases/bombardiro-crocodilo.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "221b3480ae3bc002733b402d5e45854141bfe162a21929ecac0c371c2baeeed1"
+    },
+    {
+      "id": "brr-brr-patapim",
+      "name": "Brr Brr Patapim",
+      "slot": "base",
+      "path": "bases/brr-brr-patapim.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "d4f392688ab34da5886e0e4ecbcb63d09ea87ce35eb9050b1bdb70a923b12746"
+    },
+    {
+      "id": "lirili-larila",
+      "name": "Lirili Larila",
+      "slot": "base",
+      "path": "bases/lirili-larila.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "0c1332c200b8fe6da63c139522131e80ad7879ecad5c89a6c54ea12d3d388a2e"
+    },
+    {
+      "id": "chimpanzini-bananini",
+      "name": "Chimpanzini Bananini",
+      "slot": "base",
+      "path": "bases/chimpanzini-bananini.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "958ba1808619474a1a57293d322b02d649493d60fe0363dcad40d7896f16c054"
+    },
+    {
+      "id": "tung-tung-tung-sahur",
+      "name": "Tung Tung Tung Sahur",
+      "slot": "base",
+      "path": "bases/tung-tung-tung-sahur.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "7f76b3a93ed09eaff4d1cabab80a01812536901c05224a6dd0d04e441cbbc00d"
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "dream-hills",
+      "name": "Dream hills",
+      "slot": "background",
+      "path": "backgrounds/dream-hills.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "b704a6e3fbaaf6abceebc36d16e53b5187f90cb3fc39e974f6c9a17f451d0787"
+    },
+    {
+      "id": "lavender-bedroom",
+      "name": "Lavender bedroom",
+      "slot": "background",
+      "path": "backgrounds/lavender-bedroom.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "e864eeaf98e228ca6182ea1a40f27bd2a6d68e87057fdaf9580eceb4badb8dc3"
+    }
+  ],
+  "traits": [
+    {
+      "id": "pink-lace-bow",
+      "name": "Pink lace bow",
+      "slot": "headwear",
+      "path": "traits/headwear/pink-lace-bow.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        90,
+        153,
+        1096,
+        962
+      ],
+      "sha256": "0864bd265554061efbdb52a8ba10b844f11a373cadc9067b4ade7bbe4eca4de0",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "black-lace-bow",
+      "name": "Black lace bow",
+      "slot": "headwear",
+      "path": "traits/headwear/black-lace-bow.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        37,
+        108,
+        1182,
+        1037
+      ],
+      "sha256": "ba168ea59d91dde695d268bc791ba3b39f6f07e2d64c8b89acb857c8004a0a1a",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "blue-butterfly",
+      "name": "Blue butterfly clip",
+      "slot": "headwear",
+      "path": "traits/headwear/blue-butterfly.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        53,
+        259,
+        1151,
+        757
+      ],
+      "sha256": "23b6e4e7a3903786622c4d3d1d1085aff256bcf1aaf260ad0ac250e6a4c08d6f",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "pixel-halo",
+      "name": "Pixel halo",
+      "slot": "headwear",
+      "path": "traits/headwear/pixel-halo.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        138,
+        445,
+        974,
+        372
+      ],
+      "sha256": "f2b2ca7e38ef3adeb276567e76eaa975acc8f9dbb4e234e98fc37dce902ff86a",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "silver-tiara",
+      "name": "Silver tiara",
+      "slot": "headwear",
+      "path": "traits/headwear/silver-tiara.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        92,
+        317,
+        1073,
+        680
+      ],
+      "sha256": "13778d41325bf54ab9b0c0b1528d7c73b16060be43b437218e7bc2892aec0916",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "angel-wings",
+      "name": "Angel wings",
+      "slot": "back",
+      "path": "traits/back/angel-wings.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        30,
+        312,
+        1209,
+        645
+      ],
+      "sha256": "6618b36baf7b5c273830670a29b04007c3057a91624eddd888f4eb9d8e535824",
+      "compatibleBases": [
+        "ballerina-cappuccina",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "pink-heart-sticker",
+      "name": "Pink heart cheek sticker",
+      "slot": "face",
+      "path": "traits/face/pink-heart-sticker.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        196,
+        281,
+        863,
+        701
+      ],
+      "sha256": "fad56da2eba174a7763f78ab4ce35180f2a1ba8c1eece35b10bea1830a02b0ae",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    },
+    {
+      "id": "pixel-sparkles",
+      "name": "Pixel sparkle aura",
+      "slot": "effect",
+      "path": "traits/effect/pixel-sparkles.png",
+      "width": 1254,
+      "height": 1254,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "5eaa87c6c3a4d61add612f49bdec2d6999dfb375945ad035473988bbedb38a95",
+      "compatibleBases": [
+        "tralalero-tralala",
+        "ballerina-cappuccina",
+        "bombardiro-crocodilo",
+        "brr-brr-patapim",
+        "lirili-larila",
+        "chimpanzini-bananini",
+        "tung-tung-tung-sahur"
+      ]
+    }
+  ],
+  "placements": {
+    "tralalero-tralala": {
+      "pink-lace-bow": [
+        285,
+        219,
+        220,
+        193
+      ],
+      "black-lace-bow": [
+        285,
+        219,
+        220,
+        193
+      ],
+      "blue-butterfly": [
+        725,
+        321,
+        120,
+        79
+      ],
+      "pixel-halo": [
+        440,
+        31,
+        260,
+        99
+      ],
+      "silver-tiara": [
+        318,
+        219,
+        255,
+        162
+      ],
+      "pink-heart-sticker": [
+        701,
+        616,
+        48,
+        39
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "ballerina-cappuccina": {
+      "pink-lace-bow": [
+        323,
+        193,
+        175,
+        154
+      ],
+      "black-lace-bow": [
+        323,
+        193,
+        175,
+        154
+      ],
+      "blue-butterfly": [
+        795,
+        284,
+        110,
+        72
+      ],
+      "pixel-halo": [
+        490,
+        61,
+        260,
+        99
+      ],
+      "silver-tiara": [
+        495,
+        129,
+        240,
+        152
+      ],
+      "angel-wings": [
+        102,
+        410,
+        1050,
+        560
+      ],
+      "pink-heart-sticker": [
+        770,
+        512,
+        40,
+        32
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "bombardiro-crocodilo": {
+      "pink-lace-bow": [
+        408,
+        259,
+        185,
+        162
+      ],
+      "black-lace-bow": [
+        408,
+        259,
+        185,
+        162
+      ],
+      "blue-butterfly": [
+        700,
+        372,
+        100,
+        66
+      ],
+      "pixel-halo": [
+        455,
+        119,
+        270,
+        103
+      ],
+      "silver-tiara": [
+        480,
+        237,
+        230,
+        146
+      ],
+      "pink-heart-sticker": [
+        698,
+        592,
+        44,
+        36
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "brr-brr-patapim": {
+      "pink-lace-bow": [
+        410,
+        156,
+        170,
+        149
+      ],
+      "black-lace-bow": [
+        410,
+        156,
+        170,
+        149
+      ],
+      "blue-butterfly": [
+        743,
+        249,
+        95,
+        62
+      ],
+      "pixel-halo": [
+        505,
+        41,
+        230,
+        88
+      ],
+      "silver-tiara": [
+        510,
+        111,
+        220,
+        139
+      ],
+      "angel-wings": [
+        37,
+        375,
+        1180,
+        630
+      ],
+      "pink-heart-sticker": [
+        550,
+        419,
+        40,
+        32
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "lirili-larila": {
+      "pink-lace-bow": [
+        460,
+        161,
+        180,
+        158
+      ],
+      "black-lace-bow": [
+        460,
+        161,
+        180,
+        158
+      ],
+      "blue-butterfly": [
+        825,
+        314,
+        110,
+        72
+      ],
+      "pixel-halo": [
+        495,
+        43,
+        250,
+        95
+      ],
+      "silver-tiara": [
+        503,
+        134,
+        225,
+        143
+      ],
+      "angel-wings": [
+        37,
+        375,
+        1180,
+        630
+      ],
+      "pink-heart-sticker": [
+        734,
+        588,
+        42,
+        34
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "chimpanzini-bananini": {
+      "pink-lace-bow": [
+        465,
+        176,
+        180,
+        158
+      ],
+      "black-lace-bow": [
+        465,
+        176,
+        180,
+        158
+      ],
+      "blue-butterfly": [
+        785,
+        312,
+        100,
+        66
+      ],
+      "pixel-halo": [
+        545,
+        39,
+        240,
+        92
+      ],
+      "silver-tiara": [
+        548,
+        119,
+        225,
+        143
+      ],
+      "angel-wings": [
+        37,
+        375,
+        1180,
+        630
+      ],
+      "pink-heart-sticker": [
+        795,
+        539,
+        40,
+        32
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    "tung-tung-tung-sahur": {
+      "pink-lace-bow": [
+        365,
+        76,
+        180,
+        158
+      ],
+      "black-lace-bow": [
+        365,
+        76,
+        180,
+        158
+      ],
+      "blue-butterfly": [
+        708,
+        174,
+        95,
+        62
+      ],
+      "pixel-halo": [
+        548,
+        4,
+        145,
+        55
+      ],
+      "silver-tiara": [
+        503,
+        21,
+        235,
+        149
+      ],
+      "angel-wings": [
+        147,
+        544,
+        960,
+        512
+      ],
+      "pink-heart-sticker": [
+        715,
+        539,
+        40,
+        32
+      ],
+      "pixel-sparkles": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    }
+  },
+  "examples": [
+    {
+      "base": "tralalero-tralala",
+      "background": "dream-hills",
+      "traits": [
+        "pink-lace-bow",
+        "pink-heart-sticker",
+        "pixel-sparkles"
+      ],
+      "path": "previews/tralalero-tralala.png"
+    },
+    {
+      "base": "ballerina-cappuccina",
+      "background": "lavender-bedroom",
+      "traits": [
+        "angel-wings",
+        "pixel-halo",
+        "pink-heart-sticker"
+      ],
+      "path": "previews/ballerina-cappuccina.png"
+    },
+    {
+      "base": "bombardiro-crocodilo",
+      "background": "dream-hills",
+      "traits": [
+        "black-lace-bow",
+        "pixel-sparkles"
+      ],
+      "path": "previews/bombardiro-crocodilo.png"
+    },
+    {
+      "base": "brr-brr-patapim",
+      "background": "dream-hills",
+      "traits": [
+        "silver-tiara",
+        "pink-heart-sticker"
+      ],
+      "path": "previews/brr-brr-patapim.png"
+    },
+    {
+      "base": "lirili-larila",
+      "background": "lavender-bedroom",
+      "traits": [
+        "blue-butterfly",
+        "pixel-sparkles"
+      ],
+      "path": "previews/lirili-larila.png"
+    },
+    {
+      "base": "chimpanzini-bananini",
+      "background": "lavender-bedroom",
+      "traits": [
+        "angel-wings",
+        "pink-lace-bow",
+        "pink-heart-sticker"
+      ],
+      "path": "previews/chimpanzini-bananini.png"
+    },
+    {
+      "base": "tung-tung-tung-sahur",
+      "background": "dream-hills",
+      "traits": [
+        "pink-lace-bow",
+        "pink-heart-sticker"
+      ],
+      "path": "previews/tung-tung-tung-sahur.png"
+    }
+  ],
+  "generation": {
+    "mode": "built-in image generator",
+    "requestedModel": "GPT Image 2.5",
+    "verifiedModel": null
+  },
+  "references": [
+    {
+      "name": "Earlier wooden trait concepts",
+      "path": "references/original-wooden-concepts.png",
+      "use": "Flattened reference sheet only; compositing uses the separate bases and traits."
+    }
+  ]
+}

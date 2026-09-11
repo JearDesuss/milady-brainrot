@@ -1,0 +1,265 @@
+{
+  "thresholds": {
+    "transparentPixels": "alpha == 0",
+    "solidPixels": "alpha >= 240",
+    "partialPixels": "0 < alpha < 240",
+    "sourceRect": "bounds of pixels with alpha > 16; ignores near-invisible generation speckles"
+  },
+  "assets": [
+    {
+      "file": "backgrounds/dream-hills.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 0,
+      "solidPixels": 1572516,
+      "partialPixels": 0,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "b704a6e3fbaaf6abceebc36d16e53b5187f90cb3fc39e974f6c9a17f451d0787"
+    },
+    {
+      "file": "backgrounds/lavender-bedroom.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 0,
+      "solidPixels": 1572516,
+      "partialPixels": 0,
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "e864eeaf98e228ca6182ea1a40f27bd2a6d68e87057fdaf9580eceb4badb8dc3"
+    },
+    {
+      "file": "bases/ballerina-cappuccina.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1230246,
+      "solidPixels": 312454,
+      "partialPixels": 29816,
+      "sourceRect": [
+        311,
+        195,
+        686,
+        999
+      ],
+      "sha256": "e3668d5f435201fa1e1d39bbb360a83ab9bb4e4ce758d35ddda740aee984e316"
+    },
+    {
+      "file": "bases/bombardiro-crocodilo.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1099019,
+      "solidPixels": 446727,
+      "partialPixels": 26770,
+      "sourceRect": [
+        9,
+        231,
+        1236,
+        791
+      ],
+      "sha256": "221b3480ae3bc002733b402d5e45854141bfe162a21929ecac0c371c2baeeed1"
+    },
+    {
+      "file": "bases/brr-brr-patapim.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1023155,
+      "solidPixels": 486911,
+      "partialPixels": 62450,
+      "sourceRect": [
+        257,
+        178,
+        766,
+        1022
+      ],
+      "sha256": "d4f392688ab34da5886e0e4ecbcb63d09ea87ce35eb9050b1bdb70a923b12746"
+    },
+    {
+      "file": "bases/chimpanzini-bananini.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1126785,
+      "solidPixels": 411844,
+      "partialPixels": 33887,
+      "sourceRect": [
+        306,
+        170,
+        637,
+        985
+      ],
+      "sha256": "958ba1808619474a1a57293d322b02d649493d60fe0363dcad40d7896f16c054"
+    },
+    {
+      "file": "bases/lirili-larila.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 909634,
+      "solidPixels": 615837,
+      "partialPixels": 47045,
+      "sourceRect": [
+        143,
+        170,
+        1008,
+        1039
+      ],
+      "sha256": "0c1332c200b8fe6da63c139522131e80ad7879ecad5c89a6c54ea12d3d388a2e"
+    },
+    {
+      "file": "bases/tralalero-tralala.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1033763,
+      "solidPixels": 506037,
+      "partialPixels": 32716,
+      "sourceRect": [
+        142,
+        126,
+        1020,
+        1042
+      ],
+      "sha256": "ed89df23f11de3d779166b6905d289ee01ffe55dfaa9f62d5f867e8aa777cd5e"
+    },
+    {
+      "file": "bases/tung-tung-tung-sahur.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1215786,
+      "solidPixels": 337303,
+      "partialPixels": 19427,
+      "sourceRect": [
+        418,
+        65,
+        399,
+        1134
+      ],
+      "sha256": "7f76b3a93ed09eaff4d1cabab80a01812536901c05224a6dd0d04e441cbbc00d"
+    },
+    {
+      "file": "traits/back/angel-wings.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1230795,
+      "solidPixels": 292608,
+      "partialPixels": 49113,
+      "sourceRect": [
+        30,
+        312,
+        1209,
+        645
+      ],
+      "sha256": "6618b36baf7b5c273830670a29b04007c3057a91624eddd888f4eb9d8e535824"
+    },
+    {
+      "file": "traits/effect/pixel-sparkles.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1503493,
+      "solidPixels": 45126,
+      "partialPixels": 23897,
+      "sourceRect": [
+        38,
+        54,
+        1184,
+        1147
+      ],
+      "sha256": "5eaa87c6c3a4d61add612f49bdec2d6999dfb375945ad035473988bbedb38a95"
+    },
+    {
+      "file": "traits/face/pink-heart-sticker.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1121610,
+      "solidPixels": 440923,
+      "partialPixels": 9983,
+      "sourceRect": [
+        196,
+        281,
+        863,
+        701
+      ],
+      "sha256": "fad56da2eba174a7763f78ab4ce35180f2a1ba8c1eece35b10bea1830a02b0ae"
+    },
+    {
+      "file": "traits/headwear/black-lace-bow.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 768470,
+      "solidPixels": 648467,
+      "partialPixels": 155579,
+      "sourceRect": [
+        37,
+        108,
+        1182,
+        1037
+      ],
+      "sha256": "ba168ea59d91dde695d268bc791ba3b39f6f07e2d64c8b89acb857c8004a0a1a"
+    },
+    {
+      "file": "traits/headwear/blue-butterfly.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1032262,
+      "solidPixels": 510098,
+      "partialPixels": 30156,
+      "sourceRect": [
+        53,
+        259,
+        1151,
+        757
+      ],
+      "sha256": "23b6e4e7a3903786622c4d3d1d1085aff256bcf1aaf260ad0ac250e6a4c08d6f"
+    },
+    {
+      "file": "traits/headwear/pink-lace-bow.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 890549,
+      "solidPixels": 600064,
+      "partialPixels": 81903,
+      "sourceRect": [
+        90,
+        153,
+        1096,
+        962
+      ],
+      "sha256": "0864bd265554061efbdb52a8ba10b844f11a373cadc9067b4ade7bbe4eca4de0"
+    },
+    {
+      "file": "traits/headwear/pixel-halo.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1353231,
+      "solidPixels": 52901,
+      "partialPixels": 166384,
+      "sourceRect": [
+        138,
+        445,
+        974,
+        372
+      ],
+      "sha256": "f2b2ca7e38ef3adeb276567e76eaa975acc8f9dbb4e234e98fc37dce902ff86a"
+    },
+    {
+      "file": "traits/headwear/silver-tiara.png",
+      "width": 1254,
+      "height": 1254,
+      "transparentPixels": 1299154,
+      "solidPixels": 200064,
+      "partialPixels": 73298,
+      "sourceRect": [
+        92,
+        317,
+        1073,
+        680
+      ],
+      "sha256": "13778d41325bf54ab9b0c0b1528d7c73b16060be43b437218e7bc2892aec0916"
+    }
+  ]
+}
