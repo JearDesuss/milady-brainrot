@@ -9,8 +9,12 @@
 //      < 1% of channel samples off by more than 40);
 //   2. compose() rejects a trait whose compatibleBases excludes the base;
 //   3. compose() with no traits works (background + base only);
-//   4. the recipe survives a hash round-trip through a page reload;
-//   5. export produces a real PNG (canvas is not tainted).
+//   4. the recipe survives a hash round-trip through a real page reload
+//      (via about:blank, so the hash-on-load path runs, not a fragment jump);
+//   5. the #preview canvas that Download PNG exports produces a real PNG
+//      (canvas is not tainted);
+//   6. #preview's pixels match compose(getRecipe()) with the step-1 thresholds,
+//      so the picture on the page is the file.
 
 import { pathToFileURL } from 'node:url';
 import { readFileSync } from 'node:fs';
@@ -102,6 +106,7 @@ const recipe = { base: 'chimpanzini-bananini', background: 'lavender-bedroom', t
 await page.evaluate((r) => { window.__milady.setRecipe(r); }, recipe);
 const hash = await page.evaluate(() => location.hash);
 if (!hash || hash.length < 5) fail('setRecipe() did not write a recipe into location.hash');
+await page.goto('about:blank'); // a same-document fragment navigation would keep the old page alive
 await page.goto(base + '/' + hash, { waitUntil: 'networkidle' });
 await page.evaluate(() => window.__milady.ready);
 const back = await page.evaluate(() => window.__milady.getRecipe());
@@ -109,12 +114,33 @@ const same = back && back.base === recipe.base && back.background === recipe.bac
   JSON.stringify([...(back.traits || [])].sort()) === JSON.stringify([...recipe.traits].sort());
 (same ? pass : fail)(`recipe round-trip via ${hash} -> ${JSON.stringify(back)}`);
 
-// 5. export is a real PNG
-const pngLen = await page.evaluate(async () => {
-  const c = await window.__milady.compose(window.__milady.getRecipe());
-  return c.toDataURL('image/png').length;
+// 5. the exported canvas (#preview, what Download PNG serialises) is a real PNG
+const pngLen = await page.evaluate(() => document.getElementById('preview').toDataURL('image/png').length);
+(pngLen > 100000 ? pass : fail)(`#preview PNG data URL length ${pngLen}`);
+
+// 6. #preview shows the same pixels compose() produces for the current recipe
+const previewDiff = await page.evaluate(async () => {
+  const api = window.__milady;
+  const c = await api.compose(api.getRecipe());
+  const p = document.getElementById('preview');
+  if (p.width !== c.width || p.height !== c.height) return { sizeOk: false, w: p.width, h: p.height };
+  const a = p.getContext('2d').getImageData(0, 0, p.width, p.height).data;
+  const b = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+  let sum = 0, max = 0, bad = 0;
+  for (let i = 0; i < a.length; i += 4) {
+    for (let k = 0; k < 3; k++) {
+      const d = Math.abs(a[i + k] - b[i + k]);
+      sum += d; if (d > max) max = d; if (d > 40) bad++;
+    }
+  }
+  const n = (a.length / 4) * 3;
+  return { sizeOk: true, w: p.width, h: p.height, mean: +(sum / n).toFixed(3), max, badPct: +((bad / n) * 100).toFixed(3) };
 });
-(pngLen > 100000 ? pass : fail)(`export PNG data URL length ${pngLen}`);
+{
+  const r = previewDiff;
+  const ok = r.sizeOk && r.mean < 3 && r.badPct < 1;
+  (ok ? pass : fail)(`#preview vs compose(): ${r.w}x${r.h} mean=${r.mean} max=${r.max} bad=${r.badPct}%`);
+}
 
 if (pageErrors.length) { for (const e of pageErrors) fail('page error: ' + e); }
 

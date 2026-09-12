@@ -22,6 +22,20 @@
     'chimpanzini-bananini': 'A green monkey inside a banana, or the other way around. Looks up a lot.',
     'tung-tung-tung-sahur': 'A wooden post with a face. The oldest resident here, and the calmest.',
   };
+  const TAGS = {
+    'tralalero-tralala': 'shark',
+    'ballerina-cappuccina': 'cappuccino',
+    'bombardiro-crocodilo': 'aircraft',
+    'brr-brr-patapim': 'forest',
+    'lirili-larila': 'cactus',
+    'chimpanzini-bananini': 'banana',
+    'tung-tung-tung-sahur': 'wood',
+  };
+  // Why a base cannot wear something; shown in the panel when a trait is greyed out.
+  const WHY_NOT = {
+    'bombardiro-crocodilo': 'Bombardiro Crocodilo comes with its own wings, so the angel wings stay in the drawer.',
+    'tralalero-tralala': 'Tralalero Tralala’s fins take the place where wings would go, so the angel wings stay in the drawer.',
+  };
 
   const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -32,6 +46,8 @@
     byId: new Map(),        // id -> base | background | trait record
     slots: [],              // optional trait slots, in layer order
     recipe: null,           // {base, background, traits[]}
+    drawn: null,            // the recipe whose pixels are on the preview canvas
+    pending: Promise.resolve(), // the latest redraw
     images: new Map(),      // path -> Promise<HTMLImageElement>
     drawToken: 0,
     activeTab: null,
@@ -65,7 +81,7 @@
       const img = new Image();
       img.decoding = 'async';
       img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error('Could not load ' + path));
+      img.onerror = () => { state.images.delete(path); reject(new Error('Could not load ' + path)); };
       img.src = path; // manifest path, no query string: one cached download per file
     });
     state.images.set(path, p);
@@ -109,17 +125,21 @@
     const current = state.recipe || defaultRecipe();
     const r = recipe && typeof recipe === 'object' ? recipe : {};
     const base = state.byId.get(r.base);
-    const baseId = base && base.slot === 'base' ? base.id : current.base;
+    const baseOk = !!(base && base.slot === 'base');
+    const baseId = baseOk ? base.id : current.base;
     const bg = state.byId.get(r.background);
-    const bgId = bg && bg.slot === 'background' ? bg.id : current.background;
+    const bgOk = !!(bg && bg.slot === 'background');
+    const bgId = bgOk ? bg.id : current.background;
     const seen = new Set();
     const traits = [];
     const dropped = [];
+    if (!baseOk && r.base != null && r.base !== '') dropped.push({ text: 'No resident called ' + String(r.base) + ' here, so ' + nameOf(baseId) + ' is in the dressing room.' });
+    if (!bgOk && r.background != null && r.background !== '') dropped.push({ text: 'No room called ' + String(r.background) + ' here, so the ' + nameOf(bgId).toLowerCase() + ' is used.' });
     for (const id of Array.isArray(r.traits) ? r.traits : []) {
       const t = state.byId.get(id);
-      if (!t || !state.slots.includes(t.slot)) continue;
-      if (seen.has(t.slot)) continue;
-      if (!isCompatible(t, baseId)) { dropped.push(t); continue; }
+      if (!t || !state.slots.includes(t.slot)) { dropped.push({ name: String(id), reason: 'not in this drawer' }); continue; }
+      if (seen.has(t.slot)) { dropped.push({ name: t.name, reason: 'only one ' + t.slot + ' item at a time' }); continue; }
+      if (!isCompatible(t, baseId)) { dropped.push({ name: t.name, reason: 'not made for ' + nameOf(baseId) }); continue; }
       seen.add(t.slot);
       traits.push(t);
     }
@@ -213,8 +233,23 @@
       const ctx = preview.getContext('2d');
       ctx.clearRect(0, 0, preview.width, preview.height);
       ctx.drawImage(scratch, 0, 0);
+      state.drawn = recipe;
+      $('#stage-caption').textContent = describe(recipe);
+      // a later successful draw clears an earlier "could not load" error
+      if (errorToken && token > errorToken) { errorToken = 0; setStatus(''); }
     } catch (err) {
-      if (token === state.drawToken) setStatus(err.message || 'The look could not be drawn.', true);
+      if (token === state.drawToken) {
+        // a trait that will not load is taken off so the rest of the look still draws
+        const bad = layersFor(recipe).find((l) => err.message === 'Could not load ' + l.item.path);
+        if (bad && state.slots.includes(bad.item.slot)) {
+          applyRecipe({ ...recipe, traits: recipe.traits.filter((id) => id !== bad.item.id) }, { write: false });
+          errorToken = state.drawToken;
+          setStatus('Could not load ' + bad.item.name.toLowerCase() + ', so it was taken off.', true);
+        } else {
+          errorToken = token;
+          setStatus(err.message || 'The look could not be drawn.', true);
+        }
+      }
       throw err;
     }
   }
@@ -250,12 +285,14 @@
 
   const statusEl = $('#status');
   let statusTimer = 0;
+  let errorToken = 0; // drawToken of the redraw whose error is on the status line
   function setStatus(text, isError = false) {
     statusEl.textContent = text;
     statusEl.classList.toggle('is-error', !!isError);
     statusEl.classList.toggle('has-text', !!text);
     clearTimeout(statusTimer);
-    if (text) statusTimer = setTimeout(() => { statusEl.textContent = ''; statusEl.classList.remove('has-text', 'is-error'); }, 8000);
+    // an error stays until the next message; a notice clears itself
+    if (text && !isError) statusTimer = setTimeout(() => { statusEl.textContent = ''; statusEl.classList.remove('has-text', 'is-error'); }, 8000);
   }
 
   // ---------- selector UI ----------
@@ -269,19 +306,17 @@
   function makeThumb({ name, value, label, item, none }) {
     const input = el('input', { type: 'radio', name, value });
     const art = el('span', { class: 'thumb-art' + (none ? ' is-none' : ' is-loading'), 'aria-hidden': 'true' });
-    if (none) art.textContent = 'none';
-    else {
+    if (!none) {
       const c = document.createElement('canvas');
       const wide = item.slot === 'background';
       c.width = wide ? Math.round(THUMB_PX * 1.5) : THUMB_PX; c.height = THUMB_PX;
       art.append(c);
       thumbCanvases.set(item.id, { canvas: c, art, item });
     }
-    const why = el('span', { class: 'thumb-why' });
     const wrap = el('label', { class: 'thumb', 'data-id': value || '' }, [
-      input, art, el('span', { class: 'thumb-name', text: label }), why,
+      input, art, el('span', { class: 'thumb-name', text: label }),
     ]);
-    wrap._input = input; wrap._why = why; wrap._item = item;
+    wrap._input = input; wrap._item = item;
     return wrap;
   }
 
@@ -290,7 +325,8 @@
     if (!entry) return;
     const { canvas, art, item } = entry;
     loadImage(item.path).then((img) => {
-      const [sx, sy, sw, sh] = item.sourceRect;
+      // thumbRect is a picker hint only; compositing always uses sourceRect
+      const [sx, sy, sw, sh] = item.thumbRect || item.sourceRect;
       const W = canvas.width, H = canvas.height;
       const cover = item.slot === 'background';
       const scale = cover ? Math.max(W / sw, H / sh) : Math.min(W / sw, H / sh);
@@ -299,9 +335,13 @@
       const ctx = canvas.getContext('2d');
       ctx.imageSmoothingQuality = 'high';
       ctx.clearRect(0, 0, W, H);
+      // pale art (halo, wings, sparkles) gets a faint dark halo so it reads on the cloud ground;
+      // picker only, the compositor never sees this
+      if (item.paleArt) { ctx.shadowColor = '#5e5a6c'; ctx.shadowBlur = 2; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0; }
       ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+      ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
       art.classList.remove('is-loading');
-    }).catch(() => { art.classList.remove('is-loading'); art.classList.add('is-missing'); });
+    }).catch(() => { art.classList.remove('is-loading'); art.textContent = 'did not load'; art.classList.add('is-missing'); });
   }
 
   function buildSelector() {
@@ -334,11 +374,19 @@
         thumbs.append(makeThumb({ name: 'trait-' + slot, value: t.id, label: t.name, item: t }));
       }
       panel.append(thumbs);
+      panel.append(el('p', { class: 'panel-why', id: 'panel-why-' + slot }));
       panelsEl.append(panel);
     }
 
     $('.dresser-selector').addEventListener('change', onSelectorChange);
     selectTab(state.slots.includes('headwear') ? 'headwear' : state.slots[0]);
+
+    // fade the right edge of the tab strip while tabs are hidden past it
+    const wrap = $('.tabs-wrap');
+    const cue = () => wrap.classList.toggle('is-cut', wrap.scrollWidth - wrap.clientWidth - wrap.scrollLeft > 1);
+    wrap.addEventListener('scroll', cue, { passive: true });
+    new ResizeObserver(cue).observe(wrap);
+    cue();
   }
 
   function capitalise(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -393,13 +441,28 @@
     for (const slot of state.slots) {
       const chosen = r.traits.find((id) => state.byId.get(id).slot === slot) || '';
       const panel = $('#panel-' + slot);
+      const disabledItems = [];
       for (const thumb of panel.querySelectorAll('.thumb')) {
         const item = thumb._item;
         const ok = !item || isCompatible(item, r.base);
         thumb._input.disabled = !ok;
         thumb.classList.toggle('is-disabled', !ok);
-        thumb._why.textContent = ok ? '' : 'Not made for ' + base.name + '.';
         thumb._input.checked = thumb._input.value === chosen;
+        if (!ok) disabledItems.push(item);
+      }
+      let why = '';
+      if (disabledItems.length) {
+        why = WHY_NOT[r.base] || (disabledItems[0].name + ' was not drawn for ' + base.name + ', so it stays in the drawer.');
+      }
+      $('#panel-why-' + slot).textContent = why;
+      // the greyed radio is not reachable by keyboard, so the explanation hangs off the panel and its None radio
+      const noneInput = panel.querySelector('.thumb input[value=""]');
+      if (why) {
+        noneInput.setAttribute('aria-describedby', 'panel-why-' + slot);
+        panel.setAttribute('aria-describedby', 'panel-why-' + slot);
+      } else {
+        noneInput.removeAttribute('aria-describedby');
+        panel.removeAttribute('aria-describedby');
       }
       const tab = $('#tab-' + slot);
       const stateEl = tab.querySelector('.tab-state');
@@ -407,9 +470,8 @@
       tab.setAttribute('aria-label', capitalise(slot) + (chosen ? ', ' + nameOf(chosen) : ', none'));
     }
 
-    $('#window-title').textContent = 'dressing room — ' + base.name;
+    $('#window-title').textContent = 'Dressing room — ' + base.name;
     $('#window-id').textContent = base.path;
-    $('#stage-caption').textContent = describe(r);
     document.title = base.name + ' — Milady Brainrot';
 
     for (const btn of document.querySelectorAll('.resident')) {
@@ -419,15 +481,23 @@
     }
   }
 
-  function applyRecipe(recipe, { announceDrops = false, write = true } = {}) {
+  function applyRecipe(recipe, { announceDrops = false, write = true, notice = '' } = {}) {
     const { recipe: r, dropped } = normalizeLenient(recipe);
     state.recipe = r;
     syncUI();
     if (write) writeHash(r);
-    if (announceDrops && dropped.length) {
-      setStatus(joinNames(dropped.map((t) => t.name)) + (dropped.length > 1 ? ' are' : ' is') + ' not made for ' + nameOf(r.base) + ', so it came off.');
+    // a caller's notice and the drop explanations go out as one message, so neither overwrites the other
+    const parts = [];
+    if (notice) parts.push(notice);
+    if ((announceDrops || notice) && dropped.length) {
+      parts.push(dropped.map((d) => d.text || ('Took off ' + d.name.toLowerCase() + ': ' + d.reason + '.')).join(' '));
     }
-    return redraw();
+    if (parts.length) setStatus(parts.join(' '));
+    // awaiters (boot) still see a rejection; no caller has to catch it
+    const p = redraw();
+    state.pending = p;
+    p.catch(() => {});
+    return p;
   }
 
   // ---------- take-home bar ----------
@@ -447,8 +517,11 @@
     setStatus('Shuffled. ' + describe(state.recipe));
   }
 
-  function download() {
-    const name = fileNameFor(state.recipe);
+  async function download() {
+    // the file is named after the pixels on the canvas, never a look still loading
+    try { await state.pending; } catch (_) { setStatus('No PNG yet: the look could not be drawn.', true); return; }
+    if (!state.drawn) return;
+    const name = fileNameFor(state.drawn);
     try {
       preview.toBlob((blob) => {
         if (!blob) { setStatus('The PNG could not be made.', true); return; }
@@ -494,7 +567,7 @@
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const list = raw ? JSON.parse(raw) : [];
-      state.album = Array.isArray(list) ? list : [];
+      state.album = Array.isArray(list) ? list.filter((e) => e && typeof e === 'object' && typeof e.id === 'string') : [];
     } catch (_) { state.album = []; }
   }
   function storeAlbum() {
@@ -502,8 +575,10 @@
     catch (_) { return false; }
   }
 
-  function saveToAlbum() {
-    const r = state.recipe;
+  async function saveToAlbum() {
+    try { await state.pending; } catch (_) { setStatus('Nothing saved: the look could not be drawn.', true); return; }
+    if (!state.drawn) return;
+    const r = state.drawn;
     const small = document.createElement('canvas');
     small.width = 144; small.height = 144;
     const ctx = small.getContext('2d');
@@ -524,9 +599,14 @@
   }
 
   function removeFromAlbum(id) {
+    const index = state.album.findIndex((e) => e.id === id);
     state.album = state.album.filter((e) => e.id !== id);
     storeAlbum();
     renderAlbum();
+    // keep keyboard focus in the album rather than dropping it to <body>
+    const buttons = $('#album-list').querySelectorAll('.album-actions .button:last-child');
+    const next = buttons[Math.min(Math.max(index, 0), buttons.length - 1)];
+    if (next) next.focus(); else $('#album-title').focus({ preventScroll: true });
     setStatus('Removed from the pocket album.');
   }
 
@@ -537,15 +617,18 @@
       const r = e.recipe || {};
       const known = state.byId.has(r.base) && state.byId.has(r.background);
       const when = e.savedAt ? new Date(e.savedAt) : null;
+      const title = known ? nameOf(r.base) : 'Unknown look';
+      const timeText = when ? when.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+      const suffix = timeText ? ', saved ' + timeText : '';
       const item = el('li', { class: 'album-item' }, [
         e.thumb ? el('img', { class: 'album-thumb', src: e.thumb, alt: '', width: 72, height: 72 }) : el('span', { class: 'album-thumb' }),
         el('div', { class: 'album-text' }, [
-          el('strong', { text: known ? nameOf(r.base) : 'Unknown look' }),
-          el('span', { text: known ? describe(normalizeLenient(r).recipe) : 'This look refers to files that are no longer here.' }),
-          when ? el('span', { class: 'mono', text: 'saved ' + when.toLocaleDateString() + ' ' + when.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }) : null,
+          el('strong', { text: title }),
+          el('span', { id: 'album-desc-' + e.id, text: known ? describe(normalizeLenient(r).recipe) : 'This look refers to files that are no longer here.' }),
+          when ? el('span', { class: 'album-when', text: 'saved ' + when.toLocaleDateString() + ' ' + timeText }) : null,
           el('div', { class: 'album-actions' }, [
-            el('button', { type: 'button', class: 'button', text: 'Open', disabled: !known, onclick: () => { applyRecipe(r); setStatus('Opened from the pocket album.'); scrollTo('#dressing-room'); } }),
-            el('button', { type: 'button', class: 'button', text: 'Remove', onclick: () => removeFromAlbum(e.id) }),
+            el('button', { type: 'button', class: 'button', text: 'Open', 'aria-label': 'Open ' + title + suffix, 'aria-describedby': 'album-desc-' + e.id, disabled: !known, onclick: () => { applyRecipe(r, { notice: 'Opened from the pocket album.' }); scrollTo('#dressing-room'); } }),
+            el('button', { type: 'button', class: 'button', text: 'Remove', 'aria-label': 'Remove ' + title + suffix, 'aria-describedby': 'album-desc-' + e.id, onclick: () => removeFromAlbum(e.id) }),
           ]),
         ]),
       ]);
@@ -559,23 +642,27 @@
 
   function buildShelf() {
     const shelf = $('#shelf');
-    const wingless = (id) => !traitsOf().some((t) => t.slot === 'back' && isCompatible(t, id));
     for (const b of basesOf()) {
       const btn = el('button', {
         type: 'button', class: 'resident', 'data-base': b.id, 'aria-pressed': 'false',
+        'aria-labelledby': 'resident-name-' + b.id, 'aria-describedby': 'resident-note-' + b.id,
         onclick: () => {
-          applyRecipe({ ...state.recipe, base: b.id }, { announceDrops: true });
+          applyRecipe({ ...state.recipe, base: b.id }, { notice: b.name + ' is in the dressing room.' });
           scrollTo('#dressing-room');
-          setStatus(b.name + ' is in the dressing room.');
         },
       }, [
         el('img', { class: 'resident-art', 'data-src': b.path, alt: '' }),
-        el('span', { class: 'resident-name', text: b.name }),
-        el('span', { class: 'resident-note', text: NOTES[b.id] || '' }),
-        el('span', { class: 'resident-tag' + (wingless(b.id) ? ' is-lilac' : ''), text: wingless(b.id) ? 'no wings' : 'fits wings' }),
+        el('span', { class: 'resident-name', id: 'resident-name-' + b.id, text: b.name }),
+        el('span', { class: 'resident-note', id: 'resident-note-' + b.id, text: NOTES[b.id] || '' }),
+        el('span', { class: 'resident-tag', text: TAGS[b.id] || '' }),
       ]);
       shelf.append(el('li', {}, [btn]));
     }
+    // in the scrolling shelf, bring a focused card fully into view (snap would leave it half off-screen)
+    shelf.addEventListener('focusin', (e) => {
+      const li = e.target.closest('li');
+      if (li) li.scrollIntoView({ inline: 'start', block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' });
+    });
   }
 
   // ---------- anchors that must not clobber the recipe hash ----------
@@ -600,7 +687,8 @@
   window.addEventListener('hashchange', () => {
     if (location.hash === state.lastHash) return;
     const r = hashToRecipe(location.hash);
-    if (r) applyRecipe(r, { write: false });
+    // writeHash uses replaceState, so the address bar is corrected to the picture without a new entry
+    if (r) applyRecipe(r, { announceDrops: true });
   });
 
   // ---------- boot ----------
@@ -620,8 +708,9 @@
     }
   }
 
-  async function warmEverything() {
-    // current recipe is drawn; hero is on its way; now the rest, one at a time.
+  function warmEverything() {
+    // current recipe is drawn; hero is on its way; now the rest, all at once, so one
+    // stalled file never holds back the cast, the scrapbook or the other thumbnails.
     const m = state.manifest;
     const ordered = [];
     for (const b of m.bases) ordered.push(b);
@@ -629,12 +718,9 @@
     for (const t of m.traits) ordered.push(t);
     const first = new Set([state.recipe.base, state.recipe.background, ...state.recipe.traits]);
     ordered.sort((a, b) => (first.has(b.id) ? 1 : 0) - (first.has(a.id) ? 1 : 0));
-    for (const item of ordered) {
-      try { await loadImage(item.path); } catch (_) { /* thumb shows missing */ }
-      renderThumb(item.id);
-    }
     setDeferredSources('#cast');
     setDeferredSources('#about');
+    for (const item of ordered) renderThumb(item.id); // renderThumb loads and handles its own failure
   }
 
   async function boot() {
@@ -650,23 +736,30 @@
     buildSelector();
     buildShelf();
     loadAlbum();
-    renderAlbum();
+    try { renderAlbum(); } catch (_) { setStatus('The pocket album could not be read.', true); }
 
     $('#btn-shuffle').addEventListener('click', shuffle);
     $('#btn-download').addEventListener('click', download);
     $('#btn-copy').addEventListener('click', copyLink);
     $('#btn-save').addEventListener('click', saveToAlbum);
 
+    setDeferredSources('.masthead'); // the hero does not depend on the recipe
+
     const fromHash = hashToRecipe(location.hash);
     const initial = fromHash || defaultRecipe();
-    await applyRecipe(initial, { write: !!fromHash });
+    let firstDrawError = null;
+    try {
+      await applyRecipe(initial, { write: !!fromHash, announceDrops: !!fromHash });
+    } catch (_) {
+      // redraw may have taken a broken trait off and drawn again; that draw decides
+      try { await state.pending; } catch (e) { firstDrawError = e; }
+    }
     if (!fromHash && location.hash && document.getElementById(location.hash.slice(1))) {
       state.lastHash = location.hash; // a section anchor; leave it alone
     }
-    resolveReady();
+    if (firstDrawError) rejectReady(firstDrawError); else resolveReady();
 
-    setDeferredSources('.masthead');
-    warmEverything();
+    warmEverything(); // whatever happened to the first draw, the rest of the page still fills in
   }
 
   const api = {

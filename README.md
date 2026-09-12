@@ -16,6 +16,7 @@ Read `asset-manifest.json`. Every path is relative to this folder. Use the origi
 - A missing optional trait means no layer; no blank PNG is necessary.
 - Faces, intrinsic anatomy, sneakers, tutu, sandals, banana peel, and aircraft parts belong to the base. They are not separately swappable in this pack.
 - `previews/` contains compositions made from these exact files and placements for visual verification.
+- `thumbRect` and `paleArt` are optional picker hints for the site's thumbnails; they never affect compositing.
 
 ## Files
 

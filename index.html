@@ -38,7 +38,7 @@
         <img class="figure figure-post" data-src="bases/tung-tung-tung-sahur.png" alt="">
       </div>
       <figcaption class="masthead-caption">
-        <span>Dream hills, late afternoon. From the left: Tralalero Tralala, Ballerina Cappuccina, Tung Tung Tung Sahur.</span>
+        <span>Dream hills. From the left: Tralalero Tralala, Ballerina Cappuccina, Tung Tung Tung Sahur.</span>
         <span class="mono">backgrounds/dream-hills.png</span>
       </figcaption>
     </figure>
@@ -46,18 +46,28 @@
 
   <section id="dressing-room" class="section" aria-labelledby="dressing-title" tabindex="-1">
     <h2 id="dressing-title" class="section-title">Dressing room</h2>
-    <p class="section-intro">Pick a resident, pick a room, add what fits. The square on the left is the exact PNG you take home, 1254 by 1254.</p>
+    <p class="section-intro">Pick a resident, pick a room, add what fits. This square is the exact PNG you take home, 1254 by 1254.</p>
 
     <div class="window window-large">
       <div class="window-titlebar">
-        <span class="window-title" id="window-title">dressing room</span>
+        <span class="window-title" id="window-title">Dressing room</span>
         <span class="window-id mono" id="window-id"></span>
       </div>
 
       <div class="dresser">
         <div class="dresser-stage">
-          <canvas id="preview" class="stage" width="1254" height="1254" aria-label="Live preview of the current look"></canvas>
+          <canvas id="preview" class="stage" width="1254" height="1254" role="img" aria-label="Live preview of the current look" aria-describedby="stage-caption"></canvas>
           <p class="stage-caption" id="stage-caption"></p>
+
+          <div class="takehome" role="group" aria-label="Take home">
+            <button type="button" class="button" id="btn-shuffle">Shuffle</button>
+            <button type="button" class="button button-primary" id="btn-download">Download PNG</button>
+            <button type="button" class="button" id="btn-copy">Copy recipe link</button>
+            <button type="button" class="button" id="btn-save">Save to album</button>
+            <span class="takehome-note">The PNG is the preview, pixel for pixel.</span>
+          </div>
+
+          <p id="status" class="status" role="status" aria-live="polite"></p>
         </div>
 
         <div class="dresser-selector">
@@ -77,21 +87,11 @@
           <div class="panels" id="panels"></div>
         </div>
       </div>
-
-      <div class="takehome" role="group" aria-label="Take home">
-        <button type="button" class="button" id="btn-shuffle">Shuffle</button>
-        <button type="button" class="button button-primary" id="btn-download">Download PNG</button>
-        <button type="button" class="button" id="btn-copy">Copy recipe link</button>
-        <button type="button" class="button" id="btn-save">Save to pocket album</button>
-        <span class="takehome-note">The PNG is the preview, pixel for pixel.</span>
-      </div>
     </div>
 
-    <p id="status" class="status" role="status" aria-live="polite"></p>
-
-    <div class="window album" aria-labelledby="album-title">
+    <section class="window album" aria-labelledby="album-title">
       <div class="window-titlebar">
-        <span class="window-title" id="album-title">Pocket album</span>
+        <h3 class="window-title" id="album-title" tabindex="-1">Pocket album</h3>
         <span class="window-id mono" id="album-count"></span>
       </div>
       <div class="album-body">
@@ -99,7 +99,7 @@
         <ul class="album-list" id="album-list"></ul>
         <p class="album-empty" id="album-empty">Nothing saved yet.</p>
       </div>
-    </div>
+    </section>
   </section>
 
   <section id="cast" class="section" aria-labelledby="cast-title" tabindex="-1">
@@ -132,7 +132,7 @@
 
 <footer class="colophon">
   <span><span class="flower" aria-hidden="true">&#10047;</span> Milady Brainrot</span>
-  <span>Made of seven PNGs, eight PNGs and two PNGs.</span>
+  <span>Seven residents, eight things to wear and two rooms, all PNGs.</span>
 </footer>
 
 <script src="app.js"></script>
